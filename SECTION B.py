@@ -8,9 +8,8 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-train = pd.read_csv('../train.csv')
-test = pd.read_csv('../test.csv')
-
+train = pd.read_csv(r"C:\train_u6lujuX_CVtuZ9i.csv")
+test = pd.read_csv(r"C:\test_Y3wMUE5_7gLdaTN.csv")
 train.isnull().sum()
 
 
@@ -36,7 +35,7 @@ test['Dependents'].fillna(test["Dependents"].mode()[0], inplace=True)
 test["Self_Employed"].fillna(test["Self_Employed"].mode()[0], inplace=True)
 test["Loan_Amount_Term"].fillna(test["Loan_Amount_Term"].mode()[0], inplace=True)
 test["Credit_History"].fillna(test["Credit_History"].mode()[0], inplace=True)
-test["Loan_Amount"].fillna(test["Loan_Amount"].median(), inplace=True)
+test["LoanAmount"].fillna(test["LoanAmount"].median(), inplace=True)
 
 test.isnull().sum()
 
