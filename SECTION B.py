@@ -11,25 +11,6 @@ warnings.filterwarnings('ignore')
 train = pd.read_csv('../train.csv')
 test = pd.read_csv('../test.csv')
 
-test.head()
-
-test.tail()
-
-test.columns
-
-test.dtypes
-
-print("Test dataset shape ", test.shape)
-
-train.head()
-
-train.tail()
-
-train.dtypes
-
-print("Train dataset shape ", train.shape)
-
-# Checking for missing vales and fix them appropriately.
 train.isnull().sum()
 
 
