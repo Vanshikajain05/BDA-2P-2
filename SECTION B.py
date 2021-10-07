@@ -1,5 +1,3 @@
-# In[1]:
-
 
 import pandas as pd
 import numpy as np
@@ -10,64 +8,29 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-# In[2]:
-
-
 train = pd.read_csv('../train.csv')
 test = pd.read_csv('../test.csv')
 
-# In[4]:
-
-
 test.head()
-
-# In[5]:
-
 
 test.tail()
 
-# In[6]:
-
-
 test.columns
-
-# In[7]:
-
 
 test.dtypes
 
-# In[8]:
-
-
 print("Test dataset shape ", test.shape)
-
-# In[9]:
-
 
 train.head()
 
-# In[10]:
-
-
 train.tail()
-
-# In[11]:
-
 
 train.dtypes
 
-# In[12]:
-
-
 print("Train dataset shape ", train.shape)
-
-# In[13]:
-
 
 # Checking for missing vales and fix them appropriately.
 train.isnull().sum()
-
-# In[14]:
 
 
 train["Gender"].fillna(train["Gender"].mode()[0], inplace=True)
@@ -76,39 +39,17 @@ train['Dependents'].fillna(train["Dependents"].mode()[0], inplace=True)
 train["Self_Employed"].fillna(train["Self_Employed"].mode()[0], inplace=True)
 train["Credit_History"].fillna(train["Credit_History"].mode()[0], inplace=True)
 
-# In[15]:
-
-
 train["Loan_Amount_Term"].value_counts()
-
-# In[16]:
-
 
 train["Loan_Amount_Term"].fillna(train["Loan_Amount_Term"].mode()[0], inplace=True)
 
-# In[17]:
-
-
 train["Loan_Amount_Term"].value_counts()
-
-# In[18]:
-
 
 train["LoanAmount"].fillna(train["LoanAmount"].median(), inplace=True)
 
-# In[19]:
-
-
 train.isnull().sum()
 
-# In[20]:
-
-
 test.isnull().sum()
-
-# In[21]:
-
-
 test["Gender"].fillna(test["Gender"].mode()[0], inplace=True)
 test['Dependents'].fillna(test["Dependents"].mode()[0], inplace=True)
 test["Self_Employed"].fillna(test["Self_Employed"].mode()[0], inplace=True)
@@ -116,47 +57,24 @@ test["Loan_Amount_Term"].fillna(test["Loan_Amount_Term"].mode()[0], inplace=True
 test["Credit_History"].fillna(test["Credit_History"].mode()[0], inplace=True)
 test["Loan_Amount"].fillna(test["Loan_Amount"].median(), inplace=True)
 
-# In[22]:
-
-
 test.isnull().sum()
-
-# In[23]:
-
 
 train.info()
 
-# In[50]:
-
-
 test.info()
 
-# In[52]:
 
-
-#### Encoding categrical Features: ##########
 train_encoded = pd.get_dummies(train, drop_first=True)
 train_encoded.head()
 
-# In[54]:
 
-
-########## Split Features and Target Varible ############
 X = train_encoded.drop(columns='Loan_Status_Y')
 y = train_encoded['Loan_Status_Y']
 
-# In[55]:
-
-
-################# Splitting into Train -Test Data #######
 from sklearn.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
 
-# In[56]:
-
-
-############### Handling/Imputing Missing values #############
 from sklearn.impute import SimpleImputer
 
 imp = SimpleImputer(strategy='mean')
@@ -164,14 +82,10 @@ imp_train = imp.fit(X_train)
 X_train = imp_train.transform(X_train)
 X_test_imp = imp_train.transform(X_test)
 
-# In[57]:
-
 
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import accuracy_score, f1_score
-
-# In[58]:
 
 
 tree_clf = DecisionTreeClassifier()
@@ -182,8 +96,6 @@ print("Training Data F1 Score ", f1_score(y_train, y_pred))
 
 print("Validation Mean F1 Score: ", cross_val_score(tree_clf, X_train, y_train, cv=5, scoring='f1_macro').mean())
 print("Validation Mean Accuracy: ", cross_val_score(tree_clf, X_train, y_train, cv=5, scoring='accuracy').mean())
-
-# In[59]:
 
 
 training_accuracy = []
@@ -216,8 +128,6 @@ plot_df = Tuning_Max_depth_df.melt('Max_Depth', var_name='Metrics', value_name="
 fig, ax = plt.subplots(figsize=(15, 5))
 sns.pointplot(x="Max_Depth", y="Values", hue="Metrics", data=plot_df, ax=ax)
 
-# In[62]:
-
 
 import graphviz
 from sklearn import tree
@@ -227,9 +137,6 @@ tree_clf.fit(X_train, y_train)
 dot_data = tree.export_graphviz(tree_clf, feature_names=X.columns.tolist())
 graph = graphviz.Source(dot_data)
 graph
-
-# In[63]:
-
 
 training_accuracy = []
 val_accuracy = []
@@ -261,8 +168,6 @@ Tuning_min_samples_leaf_df = pd.DataFrame.from_dict(Tuning_min_samples_leaf)
 plot_df = Tuning_min_samples_leaf_df.melt('Min_Samples_leaf', var_name='Metrics', value_name="Values")
 fig, ax = plt.subplots(figsize=(15, 5))
 sns.pointplot(x="Min_Samples_leaf", y="Values", hue="Metrics", data=plot_df, ax=ax)
-
-# In[64]:
 
 
 from sklearn.metrics import confusion_matrix
